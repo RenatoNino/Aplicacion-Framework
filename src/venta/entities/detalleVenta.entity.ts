@@ -7,7 +7,7 @@ export class DetalleVenta{
     @PrimaryGeneratedColumn('increment')
     id:number;
 
-    @Column({type:'decimal'})
+    @Column({type:'decimal',precision:8,scale:2})
     subtotal:number;
     
     @Column({type:'int'})

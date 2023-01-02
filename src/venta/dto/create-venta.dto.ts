@@ -1,7 +1,6 @@
-import { ArrayNotEmpty } from "class-validator";
-import { Producto } from "src/producto/entities/producto.entity";
+import { DetalleVenta } from "../entities/detalleVenta.entity";
 
 export class CreateVentaDto {
-    @ArrayNotEmpty()
-    productos: Producto[];
+    monto:number;
+    detallesVenta:DetalleVenta[];
 }

@@ -10,7 +10,7 @@ export class Venta {
     @CreateDateColumn({type:'timestamp'})
     fecha:Date;
 
-    @Column({type:'decimal'})
+    @Column({type:'decimal',precision:8,scale:2})
     monto:number;
 
     @OneToMany(() => DetalleVenta,(detallesVenta) => detallesVenta.venta)
