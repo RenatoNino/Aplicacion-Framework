@@ -68,11 +68,16 @@ export class VentaService {
   }
 
   async findAll() {
-    return `This action returns all venta`;
+    const ventas = await this.ventasRepository.find();
+    return ventas;
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} venta`;
+    const venta = await this.ventasRepository.findOneBy({id});
+    if(!venta){
+      throw new HttpException(`La venta con id ${id} no existe.`,HttpStatus.NOT_FOUND);
+    }
+    return venta;
   }
 
   async update(id: number, updateVentaDto: UpdateVentaDto) {
@@ -80,6 +85,11 @@ export class VentaService {
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} venta`;
+    const venta = await this.ventasRepository.findOneBy({id});
+    if(!venta){
+      throw new HttpException(`La venta con id ${id} no existe.`,HttpStatus.NOT_FOUND);
+    }
+    await this.ventasRepository.delete({id})
+    return '¡Elimminación Exitosa!';
   }
 }

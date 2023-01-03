@@ -6,6 +6,7 @@ import { ClienteModule } from './cliente/cliente.module';
 import { Cliente } from './cliente/entities/cliente.entity';
 import { Producto } from './producto/entities/producto.entity';
 import { ProductoModule } from './producto/producto.module';
+import { DetalleVenta } from './venta/entities/detalleVenta.entity';
 import { Venta } from './venta/entities/venta.entity';
 import { VentaModule } from './venta/venta.module';
 
@@ -19,8 +20,8 @@ import { VentaModule } from './venta/venta.module';
         username: 'root',
         password: 'renato123',
         database: 'monografia_nestjs',
-        entities: [Cliente, Producto, Venta],
-        synchronize: true,
+        entities: [Cliente, Producto, Venta,DetalleVenta],
+        synchronize: false,
         autoLoadEntities: true,
       }),
     }),
