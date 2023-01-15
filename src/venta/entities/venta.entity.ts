@@ -14,6 +14,7 @@ export class Venta {
     monto:number;
 
     @OneToMany(() => DetalleVenta,(detallesVenta) => detallesVenta.venta)
+    @JoinColumn()
     detallesVenta: DetalleVenta[]
 
     @ManyToOne(()=>Cliente,(cliente)=>cliente.ventas)

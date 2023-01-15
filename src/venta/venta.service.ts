@@ -43,7 +43,8 @@ export class VentaService {
     //Registro la venta vacía
     const createVenta:CreateVentaDto = {
       detallesVenta:null,
-      monto:0
+      monto:0,
+      cliente
     }
     const venta = await this.ventasRepository.create(createVenta);
     await this.ventasRepository.save(venta);
@@ -68,7 +69,15 @@ export class VentaService {
   }
 
   async findAll() {
-    const ventas = await this.ventasRepository.find();
+    const ventas = await this.ventasRepository
+      .createQueryBuilder("Venta")
+      .innerJoin("Venta.cliente","Cliente")
+      .select("Venta.id","id")
+      .addSelect("Venta.fecha","fecha")
+      .addSelect("Venta.monto","monto")
+      .addSelect("Cliente.dni","dniCliente")
+      .getRawMany();
+
     return ventas;
   }
 
@@ -86,9 +95,25 @@ export class VentaService {
 
   async remove(id: number) {
     const venta = await this.ventasRepository.findOneBy({id});
+    console.log(venta);
     if(!venta){
       throw new HttpException(`La venta con id ${id} no existe.`,HttpStatus.NOT_FOUND);
     }
+
+    const detallesVenta = await this.detalleVentasRepository
+      .createQueryBuilder("DetalleVenta")
+      .innerJoinAndSelect("DetalleVenta.venta","Venta")
+      .innerJoinAndSelect("DetalleVenta.producto","Producto")
+      .where("Venta.id = :venta.id")
+      .setParameter("venta.id",venta.id)
+      .getMany();
+    
+    for(var i=0;i<detallesVenta.length;i++){
+      const {producto} = detallesVenta[i];
+      await this.productosRepository.update({id:producto.id},{stock:producto.stock+detallesVenta[i].cantidad});
+      await this.detalleVentasRepository.delete({id:detallesVenta[i].id});
+    }
+
     await this.ventasRepository.delete({id})
     return '¡Elimminación Exitosa!';
   }
